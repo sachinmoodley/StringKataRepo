@@ -28,12 +28,7 @@ namespace StringCalculator
                 }
             }
 
-            var sum = 0;
-            for (var i = 0; i < values.Count; i++)
-            {
-                sum += values[i];
-            }
-            return sum;
+            return values.Sum();
         }
     }
 }
