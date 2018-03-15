@@ -1,0 +1,9 @@
+C:\Users\chilli.CHILLI\Documents\Visual Studio 2015\Projects\StringCalculator\StringCalculator.Tests\bin\Debug\StringCalculator.Tests.dll
+C:\Users\chilli.CHILLI\Documents\Visual Studio 2015\Projects\StringCalculator\StringCalculator.Tests\bin\Debug\StringCalculator.Tests.pdb
+C:\Users\chilli.CHILLI\Documents\Visual Studio 2015\Projects\StringCalculator\StringCalculator.Tests\bin\Debug\nunit.framework.dll
+C:\Users\chilli.CHILLI\Documents\Visual Studio 2015\Projects\StringCalculator\StringCalculator.Tests\bin\Debug\StringCalculator.dll
+C:\Users\chilli.CHILLI\Documents\Visual Studio 2015\Projects\StringCalculator\StringCalculator.Tests\bin\Debug\StringCalculator.pdb
+C:\Users\chilli.CHILLI\Documents\Visual Studio 2015\Projects\StringCalculator\StringCalculator.Tests\bin\Debug\nunit.framework.xml
+C:\Users\chilli.CHILLI\Documents\Visual Studio 2015\Projects\StringCalculator\StringCalculator.Tests\obj\Debug\StringCalculator.Tests.csprojResolveAssemblyReference.cache
+C:\Users\chilli.CHILLI\Documents\Visual Studio 2015\Projects\StringCalculator\StringCalculator.Tests\obj\Debug\StringCalculator.Tests.dll
+C:\Users\chilli.CHILLI\Documents\Visual Studio 2015\Projects\StringCalculator\StringCalculator.Tests\obj\Debug\StringCalculator.Tests.pdb
