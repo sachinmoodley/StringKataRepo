@@ -2,85 +2,69 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace StringCalculatorKata
+namespace StringCalculator
 {
     public class StringCalculator
     {
-        public object Add(string input)
+        public int Add(string input)
         {
-            if (input == string.Empty)
-            {
-                return 0;
-            }
-            var delimiters = DefaultDelimiters();
-            ThrowsExceptionForNegatives(input);
-            ContainsNewDelimiters(ref input, ref delimiters);
+            if (input == string.Empty) return 0;
+            ContainsNegativeNumbers(input);
 
-            return ConvertValidNumbers(input, delimiters).Sum();
+            var delimiter = FetchDelimiters();
+            input = ContainsNewDelimiters(input, ref delimiter);
+            var splitInput = SplitInput(input, delimiter);
+            return ValidateNumbers(splitInput).Sum();
         }
-
-        private static string[] DefaultDelimiters()
+        private static IEnumerable<int> ConvertToNumber(IEnumerable<string> splitInput)
         {
-            return new[] { ",", "\n" };
+            return splitInput.Select(int.Parse);
         }
-        private static void ContainsNewDelimiters(ref string input, ref string[] delimiters)
+        private static IEnumerable<int> ValidateNumbers(IEnumerable<string> splitInput)
         {
-            if (StartsWithSlashes(input))
+            return ConvertToNumber(splitInput).Where(num => num < 1000);
+        }
+        private static string[] SplitInput(string input, string[] delimiter)
+        {
+            return input.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
+        }
+        private static void ContainsDelimitersOfAnyLength(ref string[] delimiter, string newDelimiter)
+        {
+            if (newDelimiter.Contains("["))
             {
-                string[] splitInput = SplitInput(input);
-                var getDelimiterInput = splitInput[0];
-                if (InputContainsDelimitersWithMoreThanOneLenght(getDelimiterInput))
-                {
-                    delimiters = ReturnMUltipleDelimiters(getDelimiterInput);
-                }
-                else
-                {
-                    delimiters = ReturnSingleUnknownDelimiter(getDelimiterInput);
-                }
-                var getNewInput = splitInput[1];
-                input = getNewInput;
+                var squares = new[] { ']', '[' };
+                delimiter = newDelimiter.Split(squares);
             }
         }
-        private static bool StartsWithSlashes(string input)
+        private static string RemoveSlashes(string input)
+        {
+            return input.Remove(0, 2);
+        }
+        private static bool StartsWithDoubleSlashes(string input)
         {
             return input.StartsWith("//");
         }
-        private static string[] SplitInput(string input)
+        private static string ContainsNewDelimiters(string input, ref string[] delimiter)
         {
-            return input.Split('\n');
-        }
-        private static bool InputContainsDelimitersWithMoreThanOneLenght(string getDelimiterInput)
-        {
-            return getDelimiterInput.Contains("[");
-        }
-        private static string[] ReturnMUltipleDelimiters(string getDelimiterInput)
-        {
-            var splitDelimiters = getDelimiterInput.Split(']', '[');
-            var getMultipleDelimiters = splitDelimiters.Where(x => x != splitDelimiters[0]).ToArray();
-            var delimiters = getMultipleDelimiters;
-            return delimiters;
-        }
-        private static string[] ReturnSingleUnknownDelimiter(string getDelimiterInput)
-        {
-            var removeDoubleSlashes = getDelimiterInput.Remove(0, 2);
-            var delimiters = new[] { removeDoubleSlashes };
-            return delimiters;
-        }
-        private static IEnumerable<int> ConvertValidNumbers(string input, string[] delimiters)
-        {
-
-            return SplitNumbers(input, delimiters).Select(int.Parse).Where(x => x < 1000);
-        }
-        private static string[] SplitNumbers(string input, string[] delimiters)
-        {
-            return input.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-        }
-        private static void ThrowsExceptionForNegatives(string input)
-        {
-            if (input.Contains("-"))
+            if (StartsWithDoubleSlashes(input))
             {
-                throw new Exception($"negatives not allowed: {input}");
+                input = RemoveSlashes(input);
+                var splitNewInput = SplitInput(input, delimiter);
+                var newDelimiter = splitNewInput[0];
+                delimiter = new[] { newDelimiter };
+                ContainsDelimitersOfAnyLength(ref delimiter, newDelimiter);
+                input = splitNewInput[1];
             }
+            return input;
+        }
+        private static string[] FetchDelimiters()
+        {
+            return new[] { ",", "\n" };
+        }
+
+        private static void ContainsNegativeNumbers(string input)
+        {
+            if (input.Contains("-")) throw new Exception($"negatives not allowed: {input}");
         }
     }
 }
