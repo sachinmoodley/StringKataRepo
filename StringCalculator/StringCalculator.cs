@@ -8,63 +8,57 @@ namespace StringCalculator
     {
         public int Add(string input)
         {
-            if (input == string.Empty) return 0;
-            ContainsNegativeNumbers(input);
-
-            var delimiter = FetchDelimiters();
-            input = ContainsNewDelimiters(input, ref delimiter);
-            var splitInput = SplitInput(input, delimiter);
-            return ValidateNumbers(splitInput).Sum();
-        }
-        private static IEnumerable<int> ConvertToNumber(IEnumerable<string> splitInput)
-        {
-            return splitInput.Select(int.Parse);
-        }
-        private static IEnumerable<int> ValidateNumbers(IEnumerable<string> splitInput)
-        {
-            return ConvertToNumber(splitInput).Where(num => num < 1000);
-        }
-        private static string[] SplitInput(string input, string[] delimiter)
-        {
-            return input.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
-        }
-        private static void ContainsDelimitersOfAnyLength(ref string[] delimiter, string newDelimiter)
-        {
-            if (newDelimiter.Contains("["))
+            if (input == string.Empty)
             {
-                var squares = new[] { ']', '[' };
-                delimiter = newDelimiter.Split(squares);
+                return 0;
+            }
+
+            var delimiters = new[] { ",", "\n" };
+            if (HasCustomDelimiters(input))
+            {
+                delimiters = GetCustomDelimiters(input);
+                input = GetNumbersAfterCustomDelimiters(input);
+            }
+
+            return GetNumberSum(input, delimiters);
+        }
+
+        private static void ContainsNegatives(string input)
+        {
+            if (input.Contains("-"))
+            {
+                throw new Exception($"negatives not allowed: {input}");
             }
         }
-        private static string RemoveSlashes(string input)
-        {
-            return input.Remove(0, 2);
-        }
-        private static bool StartsWithDoubleSlashes(string input)
+
+        private static bool HasCustomDelimiters(string input)
         {
             return input.StartsWith("//");
         }
-        private static string ContainsNewDelimiters(string input, ref string[] delimiter)
+
+        private static string GetNumbersAfterCustomDelimiters(string newInput)
         {
-            if (StartsWithDoubleSlashes(input))
-            {
-                input = RemoveSlashes(input);
-                var splitNewInput = SplitInput(input, delimiter);
-                var newDelimiter = splitNewInput[0];
-                delimiter = new[] { newDelimiter };
-                ContainsDelimitersOfAnyLength(ref delimiter, newDelimiter);
-                input = splitNewInput[1];
-            }
-            return input;
-        }
-        private static string[] FetchDelimiters()
-        {
-            return new[] { ",", "\n" };
+            var input = newInput.Split('\n');
+            return input[1];
         }
 
-        private static void ContainsNegativeNumbers(string input)
+        private static string[] GetCustomDelimiters(string input)
         {
-            if (input.Contains("-")) throw new Exception($"negatives not allowed: {input}");
+            var newInput = input.Split('\n');
+            return newInput.First()
+                .Replace("//", "")
+                .Split(new[] { "[", "]" }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        private static int GetNumberSum(string input, string[] delimiters)
+        {
+            var numbers = input.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+            ContainsNegatives(input);
+
+            return numbers
+                .Select(int.Parse)
+                .Where(n => n < 1000)
+                .Sum();
         }
     }
 }
