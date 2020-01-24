@@ -101,8 +101,8 @@ namespace StringCalculatorKata.Tests
         public void Add_GivenMultipleNegativeNumbers_ShouldThrow()
         {
             //arrange 
-            var input = "-1,-4,-3,-7";
-            var expected = $"negatives not allowed: {input}";
+            var input = "-1,4,-3,7";
+            var expected = $"negatives not allowed: -1,-3";
             var sut = CreateCalculator();
             //act
             var actual = Assert.Throws<Exception>(() => sut.Add(input));

@@ -8,10 +8,7 @@ namespace StringCalculator
     {
         public int Add(string input)
         {
-            if (input == string.Empty)
-            {
-                return 0;
-            }
+            if (input == string.Empty) { return 0; }
 
             var delimiters = new[] { ",", "\n" };
             if (HasCustomDelimiters(input))
@@ -23,11 +20,12 @@ namespace StringCalculator
             return GetNumberSum(input, delimiters);
         }
 
-        private static void ContainsNegatives(string input)
+        private static void ContainsNegatives(string[] input)
         {
-            if (input.Contains("-"))
+            var negativeNumbers = input.Select(int.Parse).Where(x => x < 0).ToList();
+            if (negativeNumbers.Any())
             {
-                throw new Exception($"negatives not allowed: {input}");
+                throw new Exception($"negatives not allowed: {string.Join(",", negativeNumbers)}");
             }
         }
 
@@ -53,7 +51,7 @@ namespace StringCalculator
         private static int GetNumberSum(string input, string[] delimiters)
         {
             var numbers = input.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-            ContainsNegatives(input);
+            ContainsNegatives(numbers);
 
             return numbers
                 .Select(int.Parse)
