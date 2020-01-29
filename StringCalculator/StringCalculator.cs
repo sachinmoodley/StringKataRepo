@@ -10,6 +10,8 @@ namespace StringCalculator
         {
             if (input == string.Empty) { return 0; }
 
+            // TODO this block of code mixes responsibilities. It is building a list of delimiters
+            //       and gets the number section.
             var delimiters = new[] { ",", "\n" };
             if (HasCustomDelimiters(input))
             {
@@ -20,6 +22,7 @@ namespace StringCalculator
             return GetNumberSum(input, delimiters);
         }
 
+        // TODO this method mixes responsibilities. It is parsing numbers and checking for negatives.
         private static void ContainsNegatives(string[] input)
         {
             var negativeNumbers = input.Select(int.Parse).Where(x => x < 0).ToList();
@@ -48,6 +51,8 @@ namespace StringCalculator
                 .Split(new[] { "[", "]" }, StringSplitOptions.RemoveEmptyEntries);
         }
 
+        // TODO this method mixes responsibilities. It is parsing, filtering numbers under 1000,
+        //       summing numbers and doing a bit of co-ordination (the co-ordination is the call to ContainsNegatives).
         private static int GetNumberSum(string input, string[] delimiters)
         {
             var numbers = input.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
