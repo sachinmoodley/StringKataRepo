@@ -147,8 +147,8 @@ namespace StringCalculatorKata.Tests
         public void Add_GivenNumbersGreaterThan1000_ShouldIgnore()
         {
             //arrange 
-            var input = "2,1001";
-            var expected = 2;
+            var input = "5,1001";
+            var expected = 5;
             var sut = CreateCalculator();
             //act
             var actual = sut.Add(input);

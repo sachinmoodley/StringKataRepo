@@ -60,7 +60,7 @@ namespace StringCalculator
 
             return numbers
                 .Select(int.Parse)
-                .Where(n => n < 1000)
+                .Where(n => n < 1001)
                 .Sum();
         }
     }
