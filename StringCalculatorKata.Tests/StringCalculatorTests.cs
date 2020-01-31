@@ -30,13 +30,12 @@ namespace StringCalculatorKata.Tests
     [TestFixture]
     public class StringCalculatorTests
     {
-        // TODO please also handle empty strings that only contain white space e.g." " and "    "
-        [Test]
-        public void Add_GivenEmptyString_ShouldReturnZero()
+        [TestCase("", 0)]
+        [TestCase(" ", 0)]
+        [TestCase("  ", 0)]
+        public void Add_GivenEmptyString_ShouldReturnZero(string input, int expected)
         {
             //arrange 
-            var input = "";
-            var expected = 0;
             var sut = CreateCalculator();
             //act
             var actual = sut.Add(input);
@@ -44,13 +43,12 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        // TODO triangulate, refer to TODO comment on class
-        [Test]
-        public void Add_GivenSingleNumber_ShouldReturnThatNumber()
+        [TestCase("0",0)]
+        [TestCase("1",1)]
+        [TestCase("2",2)]
+        public void Add_GivenSingleNumber_ShouldReturnThatNumber(string input, int expected)
         {
             //arrange 
-            var input = "1";
-            var expected = 1;
             var sut = CreateCalculator();
             //act
             var actual = sut.Add(input);
@@ -58,13 +56,12 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        // TODO triangulate, refer to TODO comment on class
-        [Test]
-        public void Add_GivenTwoCommaDelimitedNumbers_ShouldReturnSum()
+        [TestCase("0,1", 1)]
+        [TestCase("1,1", 2)]
+        [TestCase("1,2", 3)]
+        public void Add_GivenTwoCommaDelimitedNumbers_ShouldReturnSum(string input, int expected)
         {
             //arrange 
-            var input = "1,2";
-            var expected = 3;
             var sut = CreateCalculator();
             //act
             var actual = sut.Add(input);
@@ -72,13 +69,12 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        // TODO triangulate, refer to TODO comment on class
-        [Test]
-        public void Add_GivenMultipleCommaDelimitedNumbers_ShouldReturnSum()
+        [TestCase("1,2,6,4,6,4,6,4", 33)]
+        [TestCase("1,45,234,43", 323)]
+        [TestCase("1,122,33,43,12,12", 223)]
+        public void Add_GivenMultipleCommaDelimitedNumbers_ShouldReturnSum(string input, int expected)
         {
             //arrange 
-            var input = "1,2,6,4,6,4,6,4";
-            var expected = 33;
             var sut = CreateCalculator();
             //act
             var actual = sut.Add(input);
@@ -86,13 +82,12 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        // TODO triangulate, refer to TODO comment on class
-        [Test]
-        public void Add_GivenNumbers_WithNewLineDelimiter_ShouldReturnSum()
+        [TestCase("1\n2,3", 6)]
+        [TestCase("1,3\n2,3", 9)]
+        [TestCase("\n2,3", 5)]
+        public void Add_GivenNumbers_WithNewLineDelimiter_ShouldReturnSum(string input, int expected)
         {
             //arrange 
-            var input = "1\n2,3";
-            var expected = 6;
             var sut = CreateCalculator();
             //act
             var actual = sut.Add(input);
@@ -100,13 +95,12 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        // TODO triangulate, refer to TODO comment on class
-        [Test]
-        public void Add_GivenNumbers_WithDifferentDelimiters_ShouldReturnSum()
+        [TestCase("//;\n1;2", 3)]
+        [TestCase("//;\n1;2;4", 7)]
+        [TestCase("//;\n1;24;3;5", 33)]
+        public void Add_GivenNumbers_WithDifferentDelimiters_ShouldReturnSum(string input, int expected)
         {
-            //arrange 
-            var input = "//;\n1;2";
-            var expected = 3;
+            //arrange
             var sut = CreateCalculator();
             //act
             var actual = sut.Add(input);
@@ -114,13 +108,12 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        // TODO triangulate, refer to TODO comment on class, you already have 2 tests, you just need one more
-        [Test]
-        public void Add_GivenNegativeNumber_ShouldThrow()
+        [TestCase("-1", "negatives not allowed: -1")]
+        [TestCase("-1,4,-3,7", "negatives not allowed: -1,-3")]
+        [TestCase("-1,-1,-1", "negatives not allowed: -1,-1,-1")]
+        public void Add_GivenNegativeNumbers_ShouldThrow(string input, string expected)
         {
             //arrange 
-            var input = "-1";
-            var expected = $"negatives not allowed: {input}";
             var sut = CreateCalculator();
             //act
             var actual = Assert.Throws<Exception>(() => sut.Add(input));
@@ -128,27 +121,12 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual.Message);
         }
 
-        // TODO triangulate, refer to TODO comment on class
-        [Test]
-        public void Add_GivenMultipleNegativeNumbers_ShouldThrow()
+        [TestCase("2,1000", 2)]
+        [TestCase("2,999", 1001)]
+        [TestCase("2,1001", 2)]
+        public void Add_GivenNumbersGreaterThan1000_ShouldIgnore(string input, int expected)
         {
             //arrange 
-            var input = "-1,4,-3,7";
-            var expected = $"negatives not allowed: -1,-3";
-            var sut = CreateCalculator();
-            //act
-            var actual = Assert.Throws<Exception>(() => sut.Add(input));
-            //assert
-            Assert.AreEqual(expected, actual.Message);
-        }
-
-        // TODO triangulate, refer to TODO comment on class
-        [Test]
-        public void Add_GivenNumbersGreaterThan1000_ShouldIgnore()
-        {
-            //arrange 
-            var input = "5,1001";
-            var expected = 5;
             var sut = CreateCalculator();
             //act
             var actual = sut.Add(input);
@@ -156,13 +134,13 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        // TODO triangulate, refer to TODO comment on class
+        [TestCase("//[***]\n1***2***3", 6)]
+        [TestCase("//[??]\n3??12??10", 25)]
+        [TestCase("//[####]\n69####22####30", 121)]
         [Test]
-        public void Add_GivenDelimiterOfAnyLength_ShouldReturnSum()
+        public void Add_GivenCustomDelimiterOfAnyLength_ShouldReturnSum(string input, int expected)
         {
             //arrange 
-            var input = "//[***]\n1***2***3";
-            var expected = 6;
             var sut = CreateCalculator();
             //act
             var actual = sut.Add(input);
@@ -170,13 +148,12 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        // TODO triangulate, refer to TODO comment on class
-        [Test]
-        public void Add_GivenMultipleDelimiters_ShouldReturnSum()
+        [TestCase("//[*][%]\n1*2%3",6)]
+        [TestCase("//[$][#]\n1#2$9",12)]
+        [TestCase("//[&][!]\n5!1&7",13)]
+        public void Add_GivenMultipleCustomDelimiters_ShouldReturnSum(string input, int expected)
         {
             //arrange 
-            var input = "//[*][%]\n1*2%3";
-            var expected = 6;
             var sut = CreateCalculator();
             //act
             var actual = sut.Add(input);
@@ -184,13 +161,12 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        // TODO triangulate, refer to TODO comment on class, you already have 2 tests, you just need one more
-        [Test]
-        public void Add_GivenMultipleDelimitersOfAnyLength_ShouldReturnSum()
+        [TestCase("//[**][%%%]\n1**2%%%3", 6)]
+        [TestCase("//[***][#####][!][*]\n45***733*838#####1!", 1617)]
+        [TestCase("//[!!][#][!][**]\n4**2!8#1!!1", 16)]
+        public void Add_GivenMultipleDelimitersOfAnyLength_ShouldReturnSum(string input, int expected)
         {
             //arrange 
-            var input = "//[**][%%%]\n1**2%%%3";
-            var expected = 6;
             var sut = CreateCalculator();
             //act
             var actual = sut.Add(input);
@@ -198,20 +174,7 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [Test]
-        public void Add_GivenManyUnknownDelimiters_WithAnyNumbers_ShouldReturnSum()
-        {
-
-            //arrange 
-            var input = "//[***][#####][!][*]\n45***733*838#####1!";
-            var expected = 1617;
-            var sut = CreateCalculator();
-            //act
-            var actual = sut.Add(input);
-            //assert
-            Assert.AreEqual(expected, actual);
-        }
-        private static StringCalculator.StringCalculator CreateCalculator() // TODO, space blindness, there should be new line above this method.
+        private static StringCalculator.StringCalculator CreateCalculator()
         {
             return new StringCalculator.StringCalculator();
         }

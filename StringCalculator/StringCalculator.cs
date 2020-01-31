@@ -8,24 +8,31 @@ namespace StringCalculator
     {
         public int Add(string input)
         {
-            if (input == string.Empty) { return 0; }
+            if (string.IsNullOrWhiteSpace(input)) { return 0; }
+
+            var delimiters = new[] { ",", "\n" };
 
             // TODO this block of code mixes responsibilities. It is building a list of delimiters
             //       and gets the number section.
-            var delimiters = new[] { ",", "\n" };
             if (HasCustomDelimiters(input))
             {
-                delimiters = GetCustomDelimiters(input);
-                input = GetNumbersAfterCustomDelimiters(input);
+                var newInput = input.Split('\n');
+                delimiters = GetCustomDelimiters(newInput.First());
+                input = newInput[1];
             }
 
-            return GetNumberSum(input, delimiters);
+            var splitNumber = input.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+            var convertedNumbers = splitNumber.Select(int.Parse).ToList();
+
+            ContainsNegatives(convertedNumbers);
+
+            var validNumbers = AcceptNumbersUnder1000(convertedNumbers);
+            return validNumbers.Sum();
         }
 
-        // TODO this method mixes responsibilities. It is parsing numbers and checking for negatives.
-        private static void ContainsNegatives(string[] input)
+        private static void ContainsNegatives(IEnumerable<int> numbers)
         {
-            var negativeNumbers = input.Select(int.Parse).Where(x => x < 0).ToList();
+            var negativeNumbers = numbers.Where(x => x < 0).ToList();
             if (negativeNumbers.Any())
             {
                 throw new Exception($"negatives not allowed: {string.Join(",", negativeNumbers)}");
@@ -37,31 +44,17 @@ namespace StringCalculator
             return input.StartsWith("//");
         }
 
-        private static string GetNumbersAfterCustomDelimiters(string newInput)
-        {
-            var input = newInput.Split('\n');
-            return input[1];
-        }
-
         private static string[] GetCustomDelimiters(string input)
         {
-            var newInput = input.Split('\n');
-            return newInput.First()
+            return input
                 .Replace("//", "")
                 .Split(new[] { "[", "]" }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        // TODO this method mixes responsibilities. It is parsing, filtering numbers under 1000,
-        //       summing numbers and doing a bit of co-ordination (the co-ordination is the call to ContainsNegatives).
-        private static int GetNumberSum(string input, string[] delimiters)
+        private static IEnumerable<int> AcceptNumbersUnder1000(IEnumerable<int> numbers)
         {
-            var numbers = input.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-            ContainsNegatives(numbers);
-
             return numbers
-                .Select(int.Parse)
-                .Where(n => n < 1001)
-                .Sum();
+                .Where(n => n <= 999);
         }
     }
 }
