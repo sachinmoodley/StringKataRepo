@@ -51,9 +51,9 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase("0",0)]
-        [TestCase("1",1)]
-        [TestCase("2",2)]
+        [TestCase("0", 0)]
+        [TestCase("1", 1)]
+        [TestCase("2", 2)]
         public void Add_GivenSingleNumber_ShouldReturnThatNumber(string input, int expected)
         {
             //arrange 
@@ -103,11 +103,9 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        // TODO so here you've now got a little triangulation going but have missed an important piece of data
-        //       the delimiter itself, you've specified the ; for all 3 tests.
         [TestCase("//;\n1;2", 3)]
-        [TestCase("//;\n1;2;4", 7)]
-        [TestCase("//;\n1;24;3;5", 33)]
+        [TestCase("//#\n1#2#4", 7)]
+        [TestCase("//!\n1!24!3!5", 33)]
         public void Add_GivenNumbers_WithDifferentDelimiters_ShouldReturnSum(string input, int expected)
         {
             //arrange
@@ -147,7 +145,6 @@ namespace StringCalculatorKata.Tests
         [TestCase("//[***]\n1***2***3", 6)]
         [TestCase("//[??]\n3??12??10", 25)]
         [TestCase("//[####]\n69####22####30", 121)]
-        [Test] // TODO you don't need this test attribute.
         public void Add_GivenCustomDelimiterOfAnyLength_ShouldReturnSum(string input, int expected)
         {
             //arrange 
@@ -158,9 +155,9 @@ namespace StringCalculatorKata.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase("//[*][%]\n1*2%3",6)]
-        [TestCase("//[$][#]\n1#2$9",12)]
-        [TestCase("//[&][!]\n5!1&7",13)]
+        [TestCase("//[*][%]\n1*2%3", 6)]
+        [TestCase("//[$][#]\n1#2$9", 12)]
+        [TestCase("//[&][!]\n5!1&7", 13)]
         public void Add_GivenMultipleCustomDelimiters_ShouldReturnSum(string input, int expected)
         {
             //arrange 
