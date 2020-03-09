@@ -8,18 +8,13 @@ namespace StringCalculator
     {
         public int Add(string input)
         {
-            if (string.IsNullOrWhiteSpace(input)) { return 0; }
+            if (string.IsNullOrWhiteSpace(input)) return 0;
 
             var delimiters = new[] { ",", "\n" };
 
-            // TODO this block of code mixes responsibilities. It is building a list of delimiters
-            //       and gets the number section.
-            if (HasCustomDelimiters(input))
-            {
-                var newInput = input.Split('\n');
-                delimiters = GetCustomDelimiters(newInput.First());
-                input = newInput[1];
-            }
+            var newInput = GetInputAfterCustomDelimiters(input);
+            delimiters = GetCustomDelimiters(input, delimiters, newInput);
+            input = GetInputForCustomDelimiters(input, newInput);
 
             var splitNumber = input.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
             var convertedNumbers = splitNumber.Select(int.Parse).ToList();
@@ -28,6 +23,24 @@ namespace StringCalculator
 
             var validNumbers = AcceptNumbersUnder1000(convertedNumbers);
             return validNumbers.Sum();
+        }
+
+        private static string GetInputForCustomDelimiters(string input, string[] newInput)
+        {
+            if (!HasCustomDelimiters(input)) return input;
+            return newInput[1];
+        }
+
+        private static string[] GetCustomDelimiters(string input, string[] delimiters, string[] newInput)
+        {
+            if (!HasCustomDelimiters(input)) return delimiters;
+            return GetCustomDelimiters(newInput.First());
+        }
+
+        private static string[] GetInputAfterCustomDelimiters(string input)
+        {
+            if (!HasCustomDelimiters(input)) return null;
+            return input.Split('\n');
         }
 
         private static void ContainsNegatives(IEnumerable<int> numbers)
