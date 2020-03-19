@@ -27,20 +27,17 @@ namespace StringCalculator
 
         private static string GetInputForCustomDelimiters(string input, string[] newInput)
         {
-            if (!HasCustomDelimiters(input)) return input;
-            return newInput[1];
+            return !HasCustomDelimiters(input) ? input : newInput[1];
         }
 
         private static string[] GetCustomDelimiters(string input, string[] delimiters, string[] newInput)
         {
-            if (!HasCustomDelimiters(input)) return delimiters;
-            return GetCustomDelimiters(newInput.First());
+            return !HasCustomDelimiters(input) ? delimiters : GetCustomDelimiters(newInput.First());
         }
 
         private static string[] GetInputAfterCustomDelimiters(string input)
         {
-            if (!HasCustomDelimiters(input)) return null;
-            return input.Split('\n');
+            return !HasCustomDelimiters(input) ? null : input.Split('\n');
         }
 
         private static void ContainsNegatives(IEnumerable<int> numbers)
